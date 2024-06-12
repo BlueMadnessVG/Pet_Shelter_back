@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('gender');
             $table->integer('age');
             $table->string('weight');
-            $table->string('img');
+            $table->binary('img');
             $table->timestamps();
         });
     }

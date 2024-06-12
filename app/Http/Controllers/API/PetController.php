@@ -57,7 +57,7 @@ class PetController extends Controller
             "gender" => "required|in:male,female",
             "age" => "sometimes|numeric",
             "weight" => "required|numeric",
-            "img" => "required|url",
+            "img" => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
             "report" => "sometimes|string"
         ]);
 
@@ -65,7 +65,13 @@ class PetController extends Controller
             return response()->json(["error" => $validator->errors()], 422);
         }
 
-        $pet = Pet::create($validator->validated());
+        $petData = $validator->validate();
+
+        $image = $request->file('img');
+        $imagePath = $image->store('pets', 'public');
+        $petData['img'] = $imagePath;
+
+        $pet = Pet::create($petData);
 
         if($request->has('report')) {
             $report = new Report(['report' => $request->input('report')]);
