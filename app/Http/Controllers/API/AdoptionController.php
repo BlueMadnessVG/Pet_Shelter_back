@@ -15,7 +15,7 @@ class AdoptionController extends Controller
 
         $userId = Auth::id();
 
-        $adoptions = Adoption::where('userId', $userId)->with(["pet"])->get();
+        $adoptions = Adoption::where('userId', $userId)->with(["pet","user"])->get();
 
         if($adoptions->isEmpty()) {
             return response()->json(["error" => "There is no adoption yet"]. 422);
@@ -47,10 +47,10 @@ class AdoptionController extends Controller
             return response()->json(["error" => $validatorData->errors()], 422);
         }
 
-        $adoption = Adoption::create([
-            'userId' => $userId,
-            'petId' => $request['petId']
-        ]);
+        $validatedData = $validatorData->validate();
+        $validatedData['userId'] = $userId;
+        $validatedData['status'] = 'pending';
+        $adoption = Adoption::create($validatedData);
 
         return response()->json(['message' => 'Adoption created successfully', 'data' => $adoption], 200);
     }
@@ -73,5 +73,16 @@ class AdoptionController extends Controller
         $adoption->update($request->only(['petId']));
 
         return response()->json(['message' => 'Adoption updated successfully', 'data' => $adoption], 200);
+    }
+
+    public function acceptAdoption($id) {
+        $adoption = Adoption::find($id);
+        if(!$adoption) {
+            return response()->json(["error" => "Adoption not fount"], 404);
+        }
+
+        $adoption->status = 'accepted';
+        $adoption->save();
+        return response()->json(['message' => 'Adoption status updated to accepted', 'data' => $adoption], 200);
     }
 }

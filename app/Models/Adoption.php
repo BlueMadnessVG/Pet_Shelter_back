@@ -11,7 +11,8 @@ class Adoption extends Model
 
     protected $fillable = [
         "userId",
-        "petId"
+        "petId",
+        "status"
     ];
 
     protected $hidden = [
@@ -25,5 +26,5 @@ class Adoption extends Model
 
     public function user() {
         return $this->belongsTo(User::class,"userId");
-     }
+    }
 }

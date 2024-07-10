@@ -18,11 +18,16 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'level' => 'required|string'
+            'level' => 'sometimes|string'
         ]);
 
         if($validation->fails()) {
             return response()->json(["error" => $validation->errors()], 422);
+        }
+
+        if (!$request->has('level')) {
+            // Set default value for the 'level' attribute
+            $request->merge(['level' => 'user']);
         }
 
         $user = new User();
@@ -54,7 +59,7 @@ class UserController extends Controller
         $user = Auth::user();
         $token = $user->createToken('token')->plainTextToken;
 
-        return response()->json(["access_token"=> $token], 200);
+        return response()->json(["id" => $user["id"], "email"=> $user["email"], "name" => $user["name"], "access_token"=> $token], 200);
     }
 
     public function logout(Request $request) { 

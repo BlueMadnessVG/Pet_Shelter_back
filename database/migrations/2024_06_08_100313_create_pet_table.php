@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
-            $table->string('breed');
+            $table->bigInteger('breed_id');
             $table->string('gender');
             $table->integer('age');
             $table->string('weight');
