@@ -20,10 +20,10 @@ Route::get('/pets/search/{id}', [PetController::class, 'search']);
 Route::get('/breed', [PetController::class, 'show_breeds']);
 Route::post('/breed', [PetController::class, 'store_breed']);
 
-Route::post('/pets', [PetController::class,'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //  ROUTE CONTROLLER FOR PETS (WITH AUTH)
+    Route::post('/pets', [PetController::class,'store'])->middleware('admin');
     Route::patch('/pets/{id}', [PetController::class,'update'])->middleware('admin');
     Route::post('/pets/report/{id}', [PetController::class,'store_report'])->middleware('admin');
     Route::patch('/pets/report/{id}', [PetController::class,'update_report'])->middleware('admin');

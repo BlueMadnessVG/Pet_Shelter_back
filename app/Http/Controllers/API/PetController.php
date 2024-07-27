@@ -39,7 +39,7 @@ class PetController extends Controller
     }
 
     public function list(Request $request) {
-        $pageToken = $request->input('pageToken', 1);
+        $pageToken = $request->input('page', 1);
         $maxResults = $request->input('maxResults', 10);
 
         $pets = Pet::select('id', 'name', 'img')->
